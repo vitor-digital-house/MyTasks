@@ -28,7 +28,6 @@ class TaskRepository {
             }
         }
 
-
     suspend fun updateTask(task: Task): Boolean =
         withContext(Dispatchers.IO) {
             delay(1_000)
