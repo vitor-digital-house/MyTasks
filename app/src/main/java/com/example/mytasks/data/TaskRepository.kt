@@ -1,7 +1,8 @@
 package com.example.mytasks.data
 
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.coroutines.resume
@@ -9,41 +10,41 @@ import kotlin.coroutines.suspendCoroutine
 
 class TaskRepository {
 
-    private val taskDataSource = TaskDB
+    private val taskDataSource = Firebase.database.getReference("tasks")
 
     suspend fun getTasks(): List<Task> =
         withContext(Dispatchers.IO) {
-            delay(1_000)
             suspendCoroutine {
-                it.resume(taskDataSource.tasks)
+                taskDataSource.get().addOnCompleteListener { firebaseTask ->
+                    if (firebaseTask.isSuccessful) {
+                        val tasks: List<Task> = firebaseTask.result.children.mapNotNull {
+                            it.getValue(Task::class.java)
+                        }
+                        it.resume(tasks)
+                    } else {
+                        throw IllegalStateException()
+                    }
+                }
             }
         }
 
     suspend fun addTask(task: Task): Boolean =
         withContext(Dispatchers.IO) {
-            delay(1_000)
             suspendCoroutine {
-                val success: Boolean = taskDataSource.addTask(task)
-                it.resume(success)
+                taskDataSource.child(task.id).setValue(task).addOnCompleteListener { firebaseTask ->
+                    it.resume(firebaseTask.isSuccessful)
+                }
             }
         }
 
-
-    suspend fun updateTask(task: Task): Boolean =
-        withContext(Dispatchers.IO) {
-            delay(1_000)
-            suspendCoroutine {
-                val success = taskDataSource.updateTask(task)
-                it.resume(success)
-            }
-        }
+    suspend fun updateTask(task: Task): Boolean = addTask(task)
 
     suspend fun deleteTask(task: Task): Boolean =
         withContext(Dispatchers.IO) {
-            delay(1_000)
             suspendCoroutine {
-                val success = taskDataSource.deleteTask(task)
-                it.resume(success)
+                taskDataSource.child(task.id).setValue(null).addOnCompleteListener { firebaseTask ->
+                    it.resume(firebaseTask.isSuccessful)
+                }
             }
         }
 
