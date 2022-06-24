@@ -22,7 +22,7 @@ class TaskFormViewModel : ViewModel() {
             val success = repository.updateTask(task)
 
             if (success)
-                _operationResult.value = Result.Succes(Unit)
+                _operationResult.value = Result.Success(Unit)
             else
                 _operationResult.value = Result.Error
         }
@@ -35,7 +35,7 @@ class TaskFormViewModel : ViewModel() {
             val success = repository.addTask(task)
 
             if (success)
-                _operationResult.value = Result.Succes(Unit)
+                _operationResult.value = Result.Success(Unit)
             else
                 _operationResult.value = Result.Error
         }

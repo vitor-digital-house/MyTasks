@@ -22,7 +22,7 @@ class TaskListViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val tasks = repository.getTasks()
-                _tasks.value = Result.Succes(tasks)
+                _tasks.value = Result.Success(tasks)
             } catch (ex: Exception) {
                 Log.e(TAG, "fetchTasks: Error when trying to get tasks", ex)
                 _tasks.value = Result.Error

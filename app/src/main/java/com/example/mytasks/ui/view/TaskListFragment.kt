@@ -31,12 +31,12 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         binding = FragmentTaskListBinding.bind(requireView())
         with(binding) {
             rvTaskList.adapter = taskListAdapter
-            fabNewTask.setOnClickListener { navigateToTaskEditionFragment() }
+            fabNewTask.setOnClickListener { navigateToTaskFormFragment() }
             swipeLayout.setOnRefreshListener { viewModel.fetchTasks() }
         }
     }
 
-    private fun navigateToTaskEditionFragment(bundle: Bundle? = null) {
+    private fun navigateToTaskFormFragment(bundle: Bundle? = null) {
         findNavController().navigate(R.id.action_taskListFragment_to_taskFormFragment, bundle)
     }
 
@@ -45,7 +45,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
             when (it) {
                 is Result.Loading -> showLoading()
                 is Result.Error -> showError()
-                is Result.Succes -> showContent(it.data)
+                is Result.Success -> showContent(it.data)
             }
         }
     }
@@ -79,7 +79,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private fun onBtnEditClicked(task: Task) {
         val bundle = TaskFormFragment.buildBundle(task)
-        navigateToTaskEditionFragment(bundle)
+        navigateToTaskFormFragment(bundle)
     }
 
     private fun onBtnDeleteClicked(task: Task) = viewModel.deleteTask(task)
