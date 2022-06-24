@@ -41,8 +41,8 @@ class TaskFormViewModel : ViewModel() {
         }
     }
 
-    fun provideTask(taskId: Int?, title: String, description: String): Task = Task(
-        id = taskId ?: 0,
+    fun provideTask(taskId: String?, title: String, description: String): Task = Task(
+        id = taskId ?: repository.getNewId(),
         title = title,
         description = description
     )

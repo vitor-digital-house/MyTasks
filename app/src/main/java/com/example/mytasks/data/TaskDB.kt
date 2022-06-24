@@ -6,14 +6,11 @@ object TaskDB {
 
     private val mTasks: MutableList<Task> = mutableListOf()
     val tasks: List<Task> = mTasks
-    private var nextId: Int = 1
 
     fun addTask(task: Task): Boolean {
         val success = Random.nextBoolean()
         if (success) {
-            val taskWithValidId = task.copy(id = nextId)
-            mTasks.add(taskWithValidId)
-            nextId++
+            mTasks.add(task)
         }
         return success
     }

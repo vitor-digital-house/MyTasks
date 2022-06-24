@@ -95,7 +95,7 @@ class TaskFormFragment : Fragment(R.layout.fragment_task_form) {
         Toast.makeText(
             requireContext(),
             "Something went wrong, please try again.",
-            Toast.LENGTH_LONG
+            Toast.LENGTH_SHORT
         ).show()
     }
 

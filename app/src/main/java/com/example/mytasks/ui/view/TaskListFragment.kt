@@ -38,6 +38,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         with(binding) {
             rvTaskList.adapter = taskListAdapter
             fabNewTask.setOnClickListener { navigateToTaskEditionFragment() }
+            swipeLayout.setOnRefreshListener { viewModel.fetchTasks() }
         }
     }
 
@@ -61,10 +62,11 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private fun showError() {
         updateLoadingView(false)
+        binding.swipeLayout.isRefreshing = false
         Toast.makeText(
             requireContext(),
             "Something went wrong, please try again.",
-            Toast.LENGTH_LONG
+            Toast.LENGTH_SHORT
         ).show()
     }
 
@@ -77,6 +79,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private fun showContent(tasks: List<Task>) {
         updateLoadingView(false)
+        binding.swipeLayout.isRefreshing = false
         taskListAdapter.updateTasks(tasks)
     }
 
