@@ -45,7 +45,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
             when (it) {
                 is Result.Loading -> showLoading()
                 is Result.Error -> showError()
-                is Result.Succes -> showContent(it.data)
+                is Result.Success -> showContent(it.data)
             }
         }
     }

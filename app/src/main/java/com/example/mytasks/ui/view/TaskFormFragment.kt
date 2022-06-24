@@ -81,7 +81,7 @@ class TaskFormFragment : Fragment(R.layout.fragment_task_form) {
             when (it) {
                 is Result.Loading -> showLoading()
                 is Result.Error -> showError()
-                is Result.Succes -> showSuccess()
+                is Result.Success -> showSuccess()
             }
         }
     }
