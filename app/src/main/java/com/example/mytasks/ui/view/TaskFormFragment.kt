@@ -3,19 +3,17 @@ package com.example.mytasks.ui.view
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mytasks.R
 import com.example.mytasks.data.Task
 import com.example.mytasks.databinding.FragmentTaskFormBinding
 import com.example.mytasks.ui.viewModel.Result
 import com.example.mytasks.ui.viewModel.TaskFormViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class TaskFormFragment : Fragment(R.layout.fragment_task_form) {
 
@@ -36,13 +34,16 @@ class TaskFormFragment : Fragment(R.layout.fragment_task_form) {
 
     private fun setupViews() {
         binding = FragmentTaskFormBinding.bind(requireView())
-        binding.tvAction.text = if (isEdition) "Edit your task" else "Add your task"
-        binding.etTaskTitle.setText(task?.title ?: "")
-        binding.etTaskDescription.setText(task?.description ?: "")
-        binding.btnSave.setOnClickListener {
-            if (isValidTask().not()) return@setOnClickListener
-            val task = createTaskFromInput()
-            if (isEdition) viewModel.updateTask(task) else viewModel.addTask(task)
+        with(binding) {
+            tvAction.text = if (isEdition) "Edit your task" else "Add your task"
+            etTaskTitle.setText(task?.title ?: "")
+            etTaskDescription.setText(task?.description ?: "")
+            btnSave.setOnClickListener {
+                if (isValidTask().not()) return@setOnClickListener
+                val task = createTaskFromInput()
+                if (isEdition) viewModel.updateTask(task) else viewModel.addTask(task)
+            }
+            btnReturn.setOnClickListener { findNavController().popBackStack() }
         }
     }
 
@@ -108,18 +109,19 @@ class TaskFormFragment : Fragment(R.layout.fragment_task_form) {
 
     private fun showSuccess() {
         updateLoadingView(false)
-        binding.btnSave.isEnabled = false
-        Toast.makeText(requireContext(), "Success!", Toast.LENGTH_SHORT).show()
-        lifecycleScope.launch {
-            delay(2_000)
-            findNavController().popBackStack()
+        with(binding) {
+            btnSave.isEnabled = false
+            btnReturn.isVisible = btnSave.isEnabled.not()
         }
+        Toast.makeText(requireContext(), "Success!", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
-        const val TASK_KEY = "task"
+        private const val TASK_KEY = "task"
         private const val TITLE_ERROR = "Please provide a valid title"
         private const val DESCRIPTION_ERROR = "Please provide a valid description"
+
+        fun buildBundle(task: Task) = bundleOf(TASK_KEY to task)
     }
 }
 

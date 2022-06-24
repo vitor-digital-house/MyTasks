@@ -6,4 +6,5 @@
     <string name="task_description">Task Description</string>
     <string name="save">Save</string>
     <string name="delete_task">Delete task</string>
+    <string name="return_to_list">Return to task list</string>
 </resources>

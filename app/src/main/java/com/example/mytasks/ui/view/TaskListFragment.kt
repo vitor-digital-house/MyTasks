@@ -3,7 +3,6 @@ package com.example.mytasks.ui.view
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,11 +25,6 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
         setupObserver()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchTasks()
     }
 
     private fun setupViews() {
@@ -84,7 +78,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
     }
 
     private fun onBtnEditClicked(task: Task) {
-        val bundle = bundleOf(TaskFormFragment.TASK_KEY to task)
+        val bundle = TaskFormFragment.buildBundle(task)
         navigateToTaskEditionFragment(bundle)
     }
 
